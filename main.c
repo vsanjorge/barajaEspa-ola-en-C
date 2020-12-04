@@ -1,9 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-void srand(unsigned int seed); // IMPORTANTE inicializar para poder generar la semilla
-int seedMod = 0;
+#include <stdio.h> // para los printf()
+#include <stdlib.h> // para usar rand() y srand()
+#include <unistd.h> // para usar getpid()
 
 void clean_stdin(void) // UTILIZAR ESTE MÉTODO SI fflush(stdin) DIESE PROBLEMAS! source: https://stackoverflow.com/questions/17318886/fflush-is-not-working-in-linux
 {
@@ -13,8 +10,7 @@ void clean_stdin(void) // UTILIZAR ESTE MÉTODO SI fflush(stdin) DIESE PROBLEMAS
     } while (c != '\n' && c != EOF);
 }
 
-char* sacarNumero(void) {
-  srand(getpid()+seedMod); // IMPORTANTE para generar una nueva semilla en cada iteración del bucle!
+char* sacarNumero(void) { // este método genera el número o figura de la carta
   int r = ((rand()%12)+1);
   char* n = "";
   if (r == 1) {
@@ -42,12 +38,10 @@ char* sacarNumero(void) {
   } else if (r == 12) {
     n = "Rey";
   }
-  seedMod++;
   return n;
 }
 
-char* sacarPalo(void) {
-  srand(getpid()+seedMod); // IMPORTANTE para generar una nueva semilla en cada iteración del bucle!
+char* sacarPalo(void) { // este método determina el palo de la carta
   int r = ((rand()%4)+1);
   char* n = "";
   if (r == 1) {
@@ -59,16 +53,16 @@ char* sacarPalo(void) {
   } else if (r == 4) {
     n = " de Bastos";
   }
-  seedMod++;
   return n;
 }
 
-void sacarCarta(void) {
+void sacarCarta(void) { // imprime una carta aleatoria
   printf("%s%s",sacarNumero(),sacarPalo());
-  seedMod++;
 }
 
 int main(void) {
+  void srand(unsigned int seed); // IMPORTANTE inicializar para poder generar la semilla
+  srand(getpid()); // generamos la semilla para nuestro random con el ID de proceso
   for(;;) {
     printf("¿Robar carta? <s/n>: ");
     char res = getchar();
