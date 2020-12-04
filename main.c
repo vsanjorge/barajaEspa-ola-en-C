@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h> // IMPORTANTE para poder generar la semilla del random con time()
+#include <unistd.h>
 
-time_t t; // declaramos la variable de tiempo
 void srand(unsigned int seed); // IMPORTANTE inicializar para poder generar la semilla
+int seedMod = 0;
 
 void clean_stdin(void) // UTILIZAR ESTE MÉTODO SI fflush(stdin) DIESE PROBLEMAS! source: https://stackoverflow.com/questions/17318886/fflush-is-not-working-in-linux
 {
@@ -14,7 +14,7 @@ void clean_stdin(void) // UTILIZAR ESTE MÉTODO SI fflush(stdin) DIESE PROBLEMAS
 }
 
 char* sacarNumero(void) {
-  srand((unsigned) time(&t)); // IMPORTANTE para generar una nueva semilla en cada iteración del bucle!
+  srand(getpid()+seedMod); // IMPORTANTE para generar una nueva semilla en cada iteración del bucle!
   int r = ((rand()%12)+1);
   char* n = "";
   if (r == 1) {
@@ -42,11 +42,12 @@ char* sacarNumero(void) {
   } else if (r == 12) {
     n = "Rey";
   }
+  seedMod++;
   return n;
 }
 
 char* sacarPalo(void) {
-  srand((unsigned) time(&t)); // IMPORTANTE para generar una nueva semilla en cada iteración del bucle!
+  srand(getpid()+seedMod); // IMPORTANTE para generar una nueva semilla en cada iteración del bucle!
   int r = ((rand()%4)+1);
   char* n = "";
   if (r == 1) {
@@ -58,11 +59,13 @@ char* sacarPalo(void) {
   } else if (r == 4) {
     n = " de Bastos";
   }
+  seedMod++;
   return n;
 }
 
 void sacarCarta(void) {
   printf("%s%s",sacarNumero(),sacarPalo());
+  seedMod++;
 }
 
 int main(void) {
